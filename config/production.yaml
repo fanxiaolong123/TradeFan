@@ -1,0 +1,157 @@
+# 生产环境配置文件
+# ⚠️ 实盘交易配置，请谨慎使用
+
+exchange:
+  name: "binance"
+  sandbox: false  # 实盘交易
+  api_key: ""     # 从环境变量读取
+  secret: ""      # 从环境变量读取
+
+# 交易币种配置（实盘建议减少币种）
+symbols:
+  - symbol: "BTC/USDT"
+    enabled: true
+    max_position_size: 0.05  # 单币种最大5%仓位
+    strategy_params:
+      fast_ma: 15
+      slow_ma: 40
+      adx_period: 14
+      adx_threshold: 30
+      donchian_period: 20
+  - symbol: "ETH/USDT"
+    enabled: true
+    max_position_size: 0.05
+    strategy_params:
+      fast_ma: 12
+      slow_ma: 35
+      adx_period: 14
+      adx_threshold: 28
+      donchian_period: 18
+
+# 风险控制配置（实盘更严格）
+risk_control:
+  max_position_size: 0.05     # 单币种最大仓位5%
+  max_total_position: 0.3     # 总仓位限制30%
+  max_drawdown: 0.1           # 最大回撤限制10%
+  stop_loss: 0.015            # 1.5%止损
+  take_profit: 0.03           # 3%止盈
+  initial_capital: 1000       # 初始资金（请根据实际情况调整）
+  
+  # 紧急风控
+  emergency_stop_loss: 0.05   # 5%紧急止损
+  daily_loss_limit: 0.02      # 日亏损限制2%
+  max_trades_per_day: 10      # 每日最大交易次数
+  
+  # 资金管理
+  min_trade_amount: 10        # 最小交易金额（USDT）
+  max_trade_amount: 100       # 最大交易金额（USDT）
+
+# 策略配置
+strategy:
+  name: "TrendFollowing"
+  timeframe: "1h"
+  lookback_period: 200
+  
+  # 多策略配置
+  multi_strategy:
+    enabled: true
+    strategies:
+      - name: "TrendFollowing"
+        weight: 0.6
+        enabled: true
+      - name: "MeanReversion"
+        weight: 0.3
+        enabled: true
+      - name: "SimpleML"
+        weight: 0.1
+        enabled: false  # ML策略默认关闭
+
+# 执行配置
+execution:
+  order_type: "market"        # 市价单
+  slippage_tolerance: 0.001   # 滑点容忍度
+  retry_attempts: 3           # 重试次数
+  retry_delay: 1              # 重试延迟（秒）
+  
+  # 订单管理
+  cancel_timeout: 30          # 订单取消超时（秒）
+  partial_fill_threshold: 0.9 # 部分成交阈值
+
+# 监控配置
+monitoring:
+  enabled: true
+  update_interval: 30         # 状态更新间隔（秒）
+  
+  # 报警配置
+  alerts:
+    enabled: true
+    channels: ["telegram", "email"]  # 报警渠道
+    
+    # 报警条件
+    conditions:
+      - type: "drawdown"
+        threshold: 0.05         # 回撤超过5%报警
+      - type: "daily_loss"
+        threshold: 0.02         # 日亏损超过2%报警
+      - type: "position_size"
+        threshold: 0.08         # 单币种仓位超过8%报警
+      - type: "system_error"
+        enabled: true           # 系统错误报警
+
+# 通知配置
+notifications:
+  telegram:
+    enabled: false
+    bot_token: ""              # Telegram Bot Token
+    chat_id: ""                # Chat ID
+    
+  email:
+    enabled: false
+    smtp_server: "smtp.gmail.com"
+    smtp_port: 587
+    username: ""               # 邮箱用户名
+    password: ""               # 邮箱密码或应用密码
+    to_email: ""               # 接收邮箱
+
+# 日志配置
+logging:
+  level: "INFO"
+  file_path: "logs/production.log"
+  max_file_size: "50MB"
+  backup_count: 10
+  
+  # 交易日志
+  trade_log:
+    enabled: true
+    file_path: "logs/trades.log"
+    
+  # 性能日志
+  performance_log:
+    enabled: true
+    file_path: "logs/performance.log"
+    interval: 3600             # 每小时记录一次
+
+# 数据配置
+data:
+  cache_enabled: true
+  cache_duration: 300          # 缓存5分钟
+  backup_enabled: true
+  backup_interval: 3600        # 每小时备份一次
+
+# 系统配置
+system:
+  auto_restart: true           # 自动重启
+  max_restart_attempts: 5      # 最大重启次数
+  restart_delay: 60            # 重启延迟（秒）
+  
+  # 健康检查
+  health_check:
+    enabled: true
+    interval: 60               # 检查间隔（秒）
+    timeout: 10                # 超时时间（秒）
+    
+  # 性能监控
+  performance_monitoring:
+    enabled: true
+    cpu_threshold: 80          # CPU使用率阈值
+    memory_threshold: 80       # 内存使用率阈值

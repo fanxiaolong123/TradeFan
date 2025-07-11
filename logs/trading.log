@@ -1,0 +1,59 @@
+2025-07-11 16:45:51 | INFO     | modules.log_module:info:59 - 系统状态: 系统初始化 - 开始初始化交易系统
+2025-07-11 16:45:51 | INFO     | modules.log_module:info:59 - 交易所连接初始化成功: binance
+2025-07-11 16:45:51 | INFO     | modules.log_module:info:59 - 风险控制模块初始化完成 - 初始资金: 10000
+2025-07-11 16:45:51 | INFO     | modules.log_module:info:59 - 执行模块初始化完成 - 手续费率: 0.0010
+2025-07-11 16:45:51 | INFO     | modules.log_module:info:59 - 回测模块初始化完成 - 期间: 2024-01-01 至 2024-12-31
+2025-07-11 16:45:51 | INFO     | modules.log_module:info:59 - 监控模块初始化完成
+2025-07-11 16:45:51 | INFO     | modules.log_module:info:59 - 初始化趋势跟踪策略: MA(20,50) ADX(14,25) Donchian(20)
+2025-07-11 16:45:51 | INFO     | modules.log_module:info:59 - 添加策略: TrendFollowing_BTC/USDT
+2025-07-11 16:45:51 | INFO     | modules.log_module:info:59 - 为BTC/USDT创建TrendFollowing策略
+2025-07-11 16:45:51 | INFO     | modules.log_module:info:59 - 初始化趋势跟踪策略: MA(15,40) ADX(14,25) Donchian(20)
+2025-07-11 16:45:51 | INFO     | modules.log_module:info:59 - 添加策略: TrendFollowing_ETH/USDT
+2025-07-11 16:45:51 | INFO     | modules.log_module:info:59 - 为ETH/USDT创建TrendFollowing策略
+2025-07-11 16:45:51 | INFO     | modules.log_module:info:59 - 初始化趋势跟踪策略: MA(20,50) ADX(14,25) Donchian(20)
+2025-07-11 16:45:51 | INFO     | modules.log_module:info:59 - 添加策略: TrendFollowing_BNB/USDT
+2025-07-11 16:45:51 | INFO     | modules.log_module:info:59 - 为BNB/USDT创建TrendFollowing策略
+2025-07-11 16:45:51 | INFO     | modules.log_module:info:59 - 初始化趋势跟踪策略: MA(20,50) ADX(14,25) Donchian(20)
+2025-07-11 16:45:51 | INFO     | modules.log_module:info:59 - 添加策略: TrendFollowing_SOL/USDT
+2025-07-11 16:45:51 | INFO     | modules.log_module:info:59 - 为SOL/USDT创建TrendFollowing策略
+2025-07-11 16:45:51 | INFO     | modules.log_module:info:59 - 初始化趋势跟踪策略: MA(20,50) ADX(14,25) Donchian(20)
+2025-07-11 16:45:51 | INFO     | modules.log_module:info:59 - 添加策略: TrendFollowing
+2025-07-11 16:45:51 | INFO     | modules.log_module:info:59 - 系统状态: 系统初始化 - 交易系统初始化完成
+2025-07-11 16:45:51 | INFO     | modules.log_module:info:59 - 开始回测 - 币种: ['BTC/USDT', 'ETH/USDT'], 策略: TrendFollowing
+2025-07-11 16:45:51 | INFO     | modules.log_module:info:59 - 开始回测 - 策略: TrendFollowing, 币种: ['BTC/USDT', 'ETH/USDT']
+2025-07-11 16:45:51 | INFO     | modules.log_module:info:59 - 加载BTC/USDT历史数据...
+2025-07-11 16:45:54 | INFO     | modules.log_module:info:59 - 获取BTC/USDT历史数据完成，共0条记录
+2025-07-11 16:45:54 | WARNING  | modules.log_module:warning:63 - BTC/USDT历史数据为空
+2025-07-11 16:45:54 | INFO     | modules.log_module:info:59 - 加载ETH/USDT历史数据...
+2025-07-11 16:45:55 | INFO     | modules.log_module:info:59 - 获取ETH/USDT历史数据完成，共0条记录
+2025-07-11 16:45:55 | WARNING  | modules.log_module:warning:63 - ETH/USDT历史数据为空
+2025-07-11 16:45:55 | ERROR    | modules.log_module:error:67 - 回测执行失败: 无法加载历史数据
+2025-07-11 16:45:55 | ERROR    | modules.log_module:error:67 - 回测执行失败: 回测执行失败: 无法加载历史数据
+2025-07-11 16:46:07 | INFO     | modules.log_module:info:59 - 系统状态: 系统初始化 - 开始初始化交易系统
+2025-07-11 16:46:07 | INFO     | modules.log_module:info:59 - 交易所连接初始化成功: binance
+2025-07-11 16:46:07 | INFO     | modules.log_module:info:59 - 风险控制模块初始化完成 - 初始资金: 10000
+2025-07-11 16:46:07 | INFO     | modules.log_module:info:59 - 执行模块初始化完成 - 手续费率: 0.0010
+2025-07-11 16:46:07 | INFO     | modules.log_module:info:59 - 回测模块初始化完成 - 期间: 2024-01-01 至 2024-12-31
+2025-07-11 16:46:07 | INFO     | modules.log_module:info:59 - 监控模块初始化完成
+2025-07-11 16:46:07 | INFO     | modules.log_module:info:59 - 初始化趋势跟踪策略: MA(20,50) ADX(14,25) Donchian(20)
+2025-07-11 16:46:07 | INFO     | modules.log_module:info:59 - 添加策略: TrendFollowing_BTC/USDT
+2025-07-11 16:46:07 | INFO     | modules.log_module:info:59 - 为BTC/USDT创建TrendFollowing策略
+2025-07-11 16:46:07 | INFO     | modules.log_module:info:59 - 初始化趋势跟踪策略: MA(15,40) ADX(14,25) Donchian(20)
+2025-07-11 16:46:07 | INFO     | modules.log_module:info:59 - 添加策略: TrendFollowing_ETH/USDT
+2025-07-11 16:46:07 | INFO     | modules.log_module:info:59 - 为ETH/USDT创建TrendFollowing策略
+2025-07-11 16:46:07 | INFO     | modules.log_module:info:59 - 初始化趋势跟踪策略: MA(20,50) ADX(14,25) Donchian(20)
+2025-07-11 16:46:07 | INFO     | modules.log_module:info:59 - 添加策略: TrendFollowing_BNB/USDT
+2025-07-11 16:46:07 | INFO     | modules.log_module:info:59 - 为BNB/USDT创建TrendFollowing策略
+2025-07-11 16:46:07 | INFO     | modules.log_module:info:59 - 初始化趋势跟踪策略: MA(20,50) ADX(14,25) Donchian(20)
+2025-07-11 16:46:07 | INFO     | modules.log_module:info:59 - 添加策略: TrendFollowing_SOL/USDT
+2025-07-11 16:46:07 | INFO     | modules.log_module:info:59 - 为SOL/USDT创建TrendFollowing策略
+2025-07-11 16:46:07 | INFO     | modules.log_module:info:59 - 初始化趋势跟踪策略: MA(20,50) ADX(14,25) Donchian(20)
+2025-07-11 16:46:07 | INFO     | modules.log_module:info:59 - 添加策略: TrendFollowing
+2025-07-11 16:46:07 | INFO     | modules.log_module:info:59 - 系统状态: 系统初始化 - 交易系统初始化完成
+2025-07-11 16:46:07 | INFO     | modules.log_module:info:59 - 开始回测 - 币种: ['BTC/USDT'], 策略: TrendFollowing
+2025-07-11 16:46:07 | INFO     | modules.log_module:info:59 - 开始回测 - 策略: TrendFollowing, 币种: ['BTC/USDT']
+2025-07-11 16:46:07 | INFO     | modules.log_module:info:59 - 加载BTC/USDT历史数据...
+2025-07-11 16:46:07 | INFO     | modules.log_module:info:59 - 从缓存加载BTC/USDT历史数据
+2025-07-11 16:46:07 | WARNING  | modules.log_module:warning:63 - BTC/USDT历史数据为空
+2025-07-11 16:46:07 | ERROR    | modules.log_module:error:67 - 回测执行失败: 无法加载历史数据
+2025-07-11 16:46:07 | ERROR    | modules.log_module:error:67 - 回测执行失败: 回测执行失败: 无法加载历史数据

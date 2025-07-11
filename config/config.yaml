@@ -1,0 +1,69 @@
+# 交易系统配置文件
+exchange:
+  name: "binance"
+  sandbox: true  # 是否使用测试环境
+  api_key: ""    # 从环境变量读取
+  secret: ""     # 从环境变量读取
+
+# 交易币种配置
+symbols:
+  - symbol: "BTC/USDT"
+    enabled: true
+    strategy_params:
+      fast_ma: 20
+      slow_ma: 50
+      adx_period: 14
+      adx_threshold: 25
+      donchian_period: 20
+  - symbol: "ETH/USDT"
+    enabled: true
+    strategy_params:
+      fast_ma: 15
+      slow_ma: 40
+      adx_period: 14
+      adx_threshold: 25
+      donchian_period: 20
+  - symbol: "BNB/USDT"
+    enabled: true
+    strategy_params:
+      fast_ma: 20
+      slow_ma: 50
+      adx_period: 14
+      adx_threshold: 25
+      donchian_period: 20
+  - symbol: "SOL/USDT"
+    enabled: true
+    strategy_params:
+      fast_ma: 20
+      slow_ma: 50
+      adx_period: 14
+      adx_threshold: 25
+      donchian_period: 20
+
+# 风险控制配置
+risk_control:
+  max_position_size: 0.1  # 单个币种最大仓位比例
+  max_total_position: 0.8  # 总仓位限制
+  max_drawdown: 0.2       # 最大回撤限制
+  stop_loss: 0.02         # 止损比例
+  take_profit: 0.04       # 止盈比例
+  initial_capital: 10000  # 初始资金
+
+# 策略配置
+strategy:
+  name: "TrendFollowing"
+  timeframe: "1h"         # K线周期
+  lookback_period: 200    # 历史数据回看期
+
+# 回测配置
+backtest:
+  start_date: "2024-01-01"
+  end_date: "2024-12-31"
+  commission: 0.001       # 手续费率
+
+# 日志配置
+logging:
+  level: "INFO"
+  file_path: "logs/trading.log"
+  max_file_size: "10MB"
+  backup_count: 5
