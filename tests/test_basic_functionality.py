@@ -12,7 +12,7 @@ import asyncio
 from datetime import datetime
 
 # 添加项目路径
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 def test_file_structure():
     """测试文件结构"""
@@ -26,7 +26,7 @@ def test_file_structure():
         'modules/realtime_signal_generator.py',
         'config/scalping_config.yaml',
         'start_scalping.py',
-        'scalping_demo.py',
+        'demos/scalping_demo.py',
         'SCALPING_SYSTEM_GUIDE.md'
     ]
     
@@ -251,7 +251,7 @@ def test_system_readiness():
     readiness_checks.append(('配置文件', config_ready))
     
     # 检查启动脚本
-    scripts_ready = all(os.path.exists(f) for f in ['start_scalping.py', 'scalping_demo.py'])
+    scripts_ready = all(os.path.exists(f) for f in ['start_scalping.py', 'demos/scalping_demo.py'])
     readiness_checks.append(('启动脚本', scripts_ready))
     
     # 显示结果
