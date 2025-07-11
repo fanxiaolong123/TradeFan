@@ -1,6 +1,7 @@
 """
 数据模块
 负责从交易所获取行情数据、K线数据等
+集成多个数据源: Yahoo Finance, Binance, Alpha Vantage
 """
 
 import ccxt
@@ -11,6 +12,7 @@ import time
 from datetime import datetime, timedelta
 import os
 import pickle
+from .real_data_source import RealDataSource
 
 class DataModule:
     """数据获取和管理模块"""
@@ -22,6 +24,12 @@ class DataModule:
         self.data_cache = {}
         self.cache_dir = "data/cache"
         os.makedirs(self.cache_dir, exist_ok=True)
+        
+        # 初始化真实数据源
+        self.real_data_source = RealDataSource()
+        
+        # 数据源优先级
+        self.data_source_priority = ['yahoo', 'binance', 'fallback']
     
     def _init_exchange(self):
         """初始化交易所连接"""
@@ -143,6 +151,7 @@ class DataModule:
                           start_date: str, end_date: str) -> pd.DataFrame:
         """
         获取历史数据（用于回测）
+        优先使用真实数据源，失败时回退到模拟数据
         
         Args:
             symbol: 交易对
@@ -153,62 +162,46 @@ class DataModule:
         Returns:
             历史OHLCV数据
         """
-        try:
-            # 检查本地缓存文件
-            cache_file = os.path.join(
-                self.cache_dir, 
-                f"{symbol.replace('/', '_')}_{timeframe}_{start_date}_{end_date}.pkl"
-            )
-            
-            if os.path.exists(cache_file):
+        # 尝试使用真实数据源
+        for source in self.data_source_priority:
+            try:
+                if source == 'fallback':
+                    # 使用原有的模拟数据生成逻辑
+                    return self._generate_fallback_data(symbol, start_date, end_date)
+                
                 if self.logger:
-                    self.logger.info(f"从缓存加载{symbol}历史数据")
-                with open(cache_file, 'rb') as f:
-                    return pickle.load(f)
-            
-            # 转换日期
-            start_dt = datetime.strptime(start_date, '%Y-%m-%d')
-            end_dt = datetime.strptime(end_date, '%Y-%m-%d')
-            
-            all_data = []
-            current_time = start_dt
-            
-            # 分批获取数据
-            while current_time < end_dt:
-                try:
-                    since = int(current_time.timestamp() * 1000)
-                    ohlcv = self.exchange.fetch_ohlcv(symbol, timeframe, since, 1000)
-                    
-                    if not ohlcv:
-                        break
-                    
-                    all_data.extend(ohlcv)
-                    
-                    # 更新时间
-                    last_timestamp = ohlcv[-1][0]
-                    current_time = datetime.fromtimestamp(last_timestamp / 1000) + timedelta(hours=1)
-                    
-                    # 避免请求过于频繁
-                    time.sleep(0.1)
+                    self.logger.info(f"尝试从{source}获取{symbol}历史数据")
+                
+                # 使用真实数据源
+                data = self.real_data_source.get_data(
+                    symbol=symbol,
+                    timeframe=timeframe,
+                    start_date=start_date,
+                    end_date=end_date,
+                    source=source
+                )
+                
+                if len(data) > 0:
+                    # 转换为标准格式
+                    df = data.copy()
+                    df.set_index('datetime', inplace=True)
+                    df = df[~df.index.duplicated(keep='first')].sort_index()
                     
                     if self.logger:
-                        self.logger.debug(f"已获取{symbol}数据至{current_time.strftime('%Y-%m-%d %H:%M')}")
-                        
-                except Exception as e:
-                    if self.logger:
-                        self.logger.warning(f"获取{symbol}部分数据失败: {e}")
-                    break
-            
-            if not all_data:
-                raise Exception("未获取到任何历史数据")
-            
-            # 转换为DataFrame
-            df = pd.DataFrame(all_data, columns=['timestamp', 'open', 'high', 'low', 'close', 'volume'])
-            df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
-            df.set_index('timestamp', inplace=True)
-            
-            # 去重并排序
-            df = df[~df.index.duplicated(keep='first')].sort_index()
+                        self.logger.info(f"成功从{source}获取{symbol}数据: {len(df)}条记录")
+                    
+                    return df
+                    
+            except Exception as e:
+                if self.logger:
+                    self.logger.warning(f"从{source}获取{symbol}数据失败: {str(e)}")
+                continue
+        
+        # 所有数据源都失败，抛出异常
+        error_msg = f"获取{symbol}历史数据失败: 所有数据源都不可用"
+        if self.logger:
+            self.logger.error(error_msg)
+        raise Exception(error_msg)
             
             # 过滤日期范围
             df = df[(df.index >= start_date) & (df.index <= end_date)]

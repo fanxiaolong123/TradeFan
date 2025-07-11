@@ -357,7 +357,11 @@ AI生成的交易策略
 
 import pandas as pd
 import numpy as np
-import talib
+# Import custom TA indicators instead of talib
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'strategies'))
+from ta_indicators import *
 from typing import Dict
 from modules.strategy_module import BaseStrategy
 

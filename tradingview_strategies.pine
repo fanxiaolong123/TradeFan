@@ -1,0 +1,108 @@
+// TradeFan 移动平均策略 - TradingView版本
+// 复制此代码到 TradingView 的 Pine Editor 中使用
+
+//@version=5
+strategy("TradeFan MA Strategy", overlay=true, initial_capital=10000, default_qty_type=strategy.percent_of_equity, default_qty_value=95)
+
+// === 策略参数 ===
+fast_length = input.int(20, "快速移动平均周期", minval=1)
+slow_length = input.int(50, "慢速移动平均周期", minval=1)
+rsi_length = input.int(14, "RSI周期", minval=1)
+rsi_overbought = input.int(70, "RSI超买线", minval=50, maxval=100)
+rsi_oversold = input.int(30, "RSI超卖线", minval=0, maxval=50)
+
+// === 风险控制参数 ===
+stop_loss_pct = input.float(2.0, "止损百分比", minval=0.1, maxval=10.0) / 100
+take_profit_pct = input.float(4.0, "止盈百分比", minval=0.1, maxval=20.0) / 100
+
+// === 计算技术指标 ===
+fast_ma = ta.sma(close, fast_length)
+slow_ma = ta.sma(close, slow_length)
+rsi = ta.rsi(close, rsi_length)
+
+// === 交易条件 ===
+// 买入条件：快线上穿慢线 + RSI不超买
+long_condition = ta.crossover(fast_ma, slow_ma) and rsi < rsi_overbought
+
+// 卖出条件：快线下穿慢线 + RSI不超卖
+short_condition = ta.crossunder(fast_ma, slow_ma) and rsi > rsi_oversold
+
+// === 执行交易 ===
+if long_condition and strategy.position_size == 0
+    strategy.entry("Long", strategy.long)
+    
+if short_condition and strategy.position_size > 0
+    strategy.close("Long")
+
+// === 止损止盈 ===
+if strategy.position_size > 0
+    stop_price = strategy.position_avg_price * (1 - stop_loss_pct)
+    profit_price = strategy.position_avg_price * (1 + take_profit_pct)
+    
+    strategy.exit("Stop/Profit", "Long", stop=stop_price, limit=profit_price)
+
+// === 绘制图表 ===
+plot(fast_ma, "快速MA", color=color.blue, linewidth=2)
+plot(slow_ma, "慢速MA", color=color.red, linewidth=2)
+
+// 标记买卖点
+plotshape(long_condition, "买入信号", shape.triangleup, location.belowbar, color.green, size=size.small)
+plotshape(short_condition, "卖出信号", shape.triangledown, location.abovebar, color.red, size=size.small)
+
+// === 信息面板 ===
+var table info_table = table.new(position.top_right, 2, 6, bgcolor=color.white, border_width=1)
+
+if barstate.islast
+    table.cell(info_table, 0, 0, "策略信息", text_color=color.black, bgcolor=color.gray)
+    table.cell(info_table, 1, 0, "数值", text_color=color.black, bgcolor=color.gray)
+    
+    table.cell(info_table, 0, 1, "快速MA", text_color=color.black)
+    table.cell(info_table, 1, 1, str.tostring(fast_ma, "#.##"), text_color=color.blue)
+    
+    table.cell(info_table, 0, 2, "慢速MA", text_color=color.black)
+    table.cell(info_table, 1, 2, str.tostring(slow_ma, "#.##"), text_color=color.red)
+    
+    table.cell(info_table, 0, 3, "RSI", text_color=color.black)
+    table.cell(info_table, 1, 3, str.tostring(rsi, "#.##"), text_color=color.purple)
+    
+    table.cell(info_table, 0, 4, "当前价格", text_color=color.black)
+    table.cell(info_table, 1, 4, str.tostring(close, "#.##"), text_color=color.black)
+    
+    table.cell(info_table, 0, 5, "持仓状态", text_color=color.black)
+    position_text = strategy.position_size > 0 ? "多头" : "空仓"
+    table.cell(info_table, 1, 5, position_text, text_color=strategy.position_size > 0 ? color.green : color.gray)
+
+// ===== 趋势策略版本 =====
+// 如果要使用趋势策略，请将上面的代码替换为下面的代码
+
+/*
+//@version=5
+strategy("TradeFan Trend Strategy", overlay=true, initial_capital=10000, default_qty_type=strategy.percent_of_equity, default_qty_value=95)
+
+// === 策略参数 ===
+ma_length = input.int(20, "移动平均周期", minval=1)
+volatility_length = input.int(20, "波动率周期", minval=1)
+trend_threshold = input.float(2.0, "趋势阈值(%)", minval=0.1, maxval=10.0) / 100
+
+// === 计算指标 ===
+ma = ta.sma(close, ma_length)
+price_vs_ma = (close - ma) / ma
+volatility = ta.stdev(ta.change(close), volatility_length) / close
+trend_strength = (close - close[ma_length]) / close[ma_length]
+
+// === 交易条件 ===
+long_condition = close > ma and close[1] <= ma[1] and trend_strength > trend_threshold and volatility < ta.percentile_linear_interpolation(volatility, 50, 0.8)
+short_condition = close < ma and close[1] >= ma[1] and trend_strength < -trend_threshold
+
+// === 执行交易 ===
+if long_condition and strategy.position_size == 0
+    strategy.entry("Long", strategy.long)
+    
+if short_condition and strategy.position_size > 0
+    strategy.close("Long")
+
+// === 绘制图表 ===
+plot(ma, "移动平均", color=color.orange, linewidth=2)
+plotshape(long_condition, "买入", shape.triangleup, location.belowbar, color.green, size=size.small)
+plotshape(short_condition, "卖出", shape.triangledown, location.abovebar, color.red, size=size.small)
+*/
