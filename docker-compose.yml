@@ -1,0 +1,160 @@
+version: '3.8'
+
+services:
+  # InfluxDB 时序数据库
+  influxdb:
+    image: influxdb:2.7
+    container_name: tradefan-influxdb
+    ports:
+      - "8086:8086"
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=tradefan123
+      - DOCKER_INFLUXDB_INIT_ORG=tradefan
+      - DOCKER_INFLUXDB_INIT_BUCKET=market_data
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=tradefan-super-secret-auth-token
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+      - influxdb_config:/etc/influxdb2
+    networks:
+      - tradefan-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "influx", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Redis 缓存数据库
+  redis:
+    image: redis:7-alpine
+    container_name: tradefan-redis
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes --requirepass tradefan123
+    volumes:
+      - redis_data:/data
+    networks:
+      - tradefan-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Prometheus 监控系统
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: tradefan-prometheus
+    ports:
+      - "9090:9090"
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=30d'
+      - '--web.enable-lifecycle'
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    networks:
+      - tradefan-network
+    restart: unless-stopped
+    depends_on:
+      - tradefan-app
+
+  # Grafana 可视化面板
+  grafana:
+    image: grafana/grafana:latest
+    container_name: tradefan-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=tradefan123
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./config/grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./config/grafana/datasources:/etc/grafana/provisioning/datasources
+    networks:
+      - tradefan-network
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+
+  # TradeFan 主应用
+  tradefan-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tradefan-app
+    ports:
+      - "8000:8000"  # Prometheus metrics
+      - "8080:8080"  # Web API (如果有)
+    environment:
+      - ENVIRONMENT=production
+      - INFLUX_URL=http://influxdb:8086
+      - INFLUX_TOKEN=tradefan-super-secret-auth-token
+      - INFLUX_ORG=tradefan
+      - INFLUX_BUCKET=market_data
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=tradefan123
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./config:/app/config
+      - ./logs:/app/logs
+      - ./data:/app/data
+    networks:
+      - tradefan-network
+    restart: unless-stopped
+    depends_on:
+      influxdb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Nginx 反向代理 (可选)
+  nginx:
+    image: nginx:alpine
+    container_name: tradefan-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./config/nginx.conf:/etc/nginx/nginx.conf
+      - ./ssl:/etc/nginx/ssl
+    networks:
+      - tradefan-network
+    restart: unless-stopped
+    depends_on:
+      - tradefan-app
+      - grafana
+
+volumes:
+  influxdb_data:
+    driver: local
+  influxdb_config:
+    driver: local
+  redis_data:
+    driver: local
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local
+
+networks:
+  tradefan-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
