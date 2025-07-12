@@ -1,0 +1,240 @@
+# TradeFan 生产环境配置
+environment: production
+debug: false
+version: "2.0.0"
+
+# 数据库配置
+database:
+  influx_url: "http://influxdb:8086"
+  influx_token: "tradefan-super-secret-auth-token"
+  influx_org: "tradefan"
+  influx_bucket: "market_data"
+  redis_host: "redis"
+  redis_port: 6379
+  redis_db: 0
+  redis_password: "tradefan123"
+
+# 交易配置
+trading:
+  initial_capital: 1000.0  # 每个策略500U，总共1000U
+  max_positions: 7  # 7个交易对
+  max_risk_per_trade: 0.02  # 2%风险
+  stop_loss: 0.03  # 3%止损
+  take_profit: 0.06  # 6%止盈
+  max_daily_loss: 0.05  # 5%日最大损失
+  max_drawdown: 0.15  # 15%最大回撤
+  order_timeout: 300
+  max_slippage: 0.001
+  min_order_size: 0.001
+
+# 策略配置
+strategy:
+  # 短线策略参数
+  scalping:
+    ema_fast: 8
+    ema_medium: 21
+    ema_slow: 55
+    bb_period: 20
+    bb_std: 2.0
+    rsi_period: 14
+    rsi_oversold: 30
+    rsi_overbought: 70
+    macd_fast: 12
+    macd_slow: 26
+    macd_signal: 9
+    signal_threshold: 0.65  # 提高信号阈值
+    timeframes: ["5m", "15m", "30m"]
+  
+  # 趋势跟踪策略参数
+  trend_following:
+    ema_fast: 8
+    ema_medium: 21
+    ema_slow: 55
+    adx_period: 14
+    adx_threshold: 25
+    macd_fast: 12
+    macd_slow: 26
+    macd_signal: 9
+    atr_period: 14
+    atr_multiplier: 2.0
+    rsi_period: 14
+    rsi_overbought: 80
+    rsi_oversold: 20
+    trend_strength_threshold: 0.6
+    max_risk_per_trade: 0.02
+    trailing_stop_pct: 0.03
+    enable_short: false  # 现货不支持做空
+    timeframes: ["15m", "30m", "1h"]
+
+# 监控配置
+monitoring:
+  prometheus_port: 8000
+  log_level: "INFO"
+  log_file: "logs/tradefan_production.log"
+  alert_email: null
+  alert_webhook: null
+  metrics_retention_days: 90
+  health_check_interval: 30
+
+# 交易所配置
+exchanges:
+  - name: "binance"
+    api_key: "Mq0XFmuMRDMBH5NMhFWHGM8ZivVRCvAbqaBXIK3DeJc6EnNj7isN03bpdwTKUKjN"
+    api_secret: ""  # 需要在环境变量中设置
+    sandbox: true  # 先使用测试网
+    rate_limit: 1200
+    symbols:
+      - symbol: "BTC/USDT"
+        enabled: true
+        capital: 142.86  # 1000/7 ≈ 142.86
+        strategy: "both"  # 同时运行两个策略
+      - symbol: "ETH/USDT"
+        enabled: true
+        capital: 142.86
+        strategy: "both"
+      - symbol: "BNB/USDT"
+        enabled: true
+        capital: 142.86
+        strategy: "both"
+      - symbol: "SOL/USDT"
+        enabled: true
+        capital: 142.86
+        strategy: "both"
+      - symbol: "PEPE/USDT"
+        enabled: true
+        capital: 142.86
+        strategy: "scalping"  # 只用短线策略
+      - symbol: "DOGE/USDT"
+        enabled: true
+        capital: 142.86
+        strategy: "both"
+      - symbol: "WLD/USDT"
+        enabled: true
+        capital: 142.86
+        strategy: "trend_following"  # 只用趋势策略
+
+# 风险管理配置
+risk_management:
+  # 全局风险限制
+  max_total_exposure: 0.8  # 最大总仓位80%
+  max_correlation_exposure: 0.3  # 相关性资产最大30%
+  max_single_position: 0.2  # 单一仓位最大20%
+  
+  # 止损设置
+  global_stop_loss: 0.1  # 全局10%止损
+  trailing_stop: true
+  trailing_stop_distance: 0.03  # 3%追踪止损
+  
+  # 时间限制
+  max_position_hold_time: 14400  # 4小时强制平仓
+  trading_hours:
+    start: "00:00"
+    end: "23:59"
+    timezone: "UTC"
+  
+  # 紧急停止条件
+  emergency_stop:
+    daily_loss_threshold: 0.08  # 日损失8%紧急停止
+    consecutive_losses: 5  # 连续5次亏损停止
+    drawdown_threshold: 0.12  # 回撤12%停止
+
+# 通知配置
+notifications:
+  enabled: true
+  channels:
+    - type: "log"
+      level: "INFO"
+    - type: "console"
+      level: "WARNING"
+  
+  # 告警条件
+  alerts:
+    - name: "high_loss"
+      condition: "daily_pnl < -50"  # 日亏损超过50U
+      severity: "critical"
+    - name: "position_stuck"
+      condition: "position_hold_time > 7200"  # 持仓超过2小时
+      severity: "warning"
+    - name: "low_balance"
+      condition: "available_balance < 100"  # 可用余额低于100U
+      severity: "warning"
+
+# 数据配置
+data:
+  # 历史数据
+  history_days: 30  # 保留30天历史数据
+  backup_enabled: true
+  backup_interval: 3600  # 每小时备份
+  
+  # 实时数据
+  update_interval: 60  # 60秒更新一次
+  data_sources:
+    - "binance_api"
+    - "websocket"
+  
+  # 数据质量
+  data_validation: true
+  outlier_detection: true
+  missing_data_handling: "interpolate"
+
+# 性能配置
+performance:
+  # 并发设置
+  max_concurrent_requests: 10
+  request_timeout: 30
+  retry_attempts: 3
+  retry_delay: 1
+  
+  # 缓存设置
+  cache_enabled: true
+  cache_ttl: 300
+  cache_size_limit: "100MB"
+  
+  # 资源限制
+  max_memory_usage: "2GB"
+  max_cpu_usage: 80  # 80%
+  
+# 安全配置
+security:
+  # API安全
+  api_rate_limit: true
+  request_signing: true
+  timestamp_validation: true
+  
+  # 数据安全
+  encrypt_sensitive_data: true
+  secure_logging: true
+  
+  # 访问控制
+  ip_whitelist: []
+  api_key_rotation: false
+
+# 调试配置
+debug:
+  enabled: false
+  log_trades: true
+  log_signals: true
+  log_indicators: false
+  save_debug_data: false
+  
+# 回测配置
+backtest:
+  default_start_date: "2024-01-01"
+  default_end_date: "2024-06-30"
+  commission: 0.001
+  slippage: 0.0005
+  initial_capital: 10000
+  
+# 优化配置
+optimization:
+  enabled: true
+  methods: ["grid_search", "genetic", "bayesian"]
+  max_iterations: 100
+  parallel_jobs: 4
+  
+  # 参数范围
+  parameter_ranges:
+    ema_fast: [5, 15]
+    ema_slow: [20, 60]
+    rsi_period: [10, 20]
+    signal_threshold: [0.5, 0.8]

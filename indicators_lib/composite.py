@@ -425,10 +425,45 @@ def composite_momentum_score(close: pd.Series, high: pd.Series, low: pd.Series,
     return composite_score
 
 
+def momentum_oscillator(rsi: pd.Series, stoch_k: pd.Series, 
+                       weights: Tuple[float, float] = (0.6, 0.4)) -> pd.Series:
+    """
+    动量振荡器 (Momentum Oscillator)
+    
+    结合RSI和随机指标K值，生成综合动量信号
+    
+    Args:
+        rsi: RSI指标序列
+        stoch_k: 随机指标K值序列
+        weights: RSI和Stoch权重 (默认: (0.6, 0.4))
+        
+    Returns:
+        pd.Series: 动量振荡器值 (0-100)
+        
+    Example:
+        rsi = momentum.rsi(close, 14)
+        stoch_k, _ = momentum.stochastic_kd(high, low, close)
+        momentum_osc = momentum_oscillator(rsi, stoch_k)
+    """
+    try:
+        # 标准化到0-100范围
+        rsi_norm = rsi.fillna(50)  # RSI默认值50
+        stoch_norm = stoch_k.fillna(50)  # Stoch默认值50
+        
+        # 加权平均
+        oscillator = (rsi_norm * weights[0] + stoch_norm * weights[1])
+        
+        return oscillator.round(2)
+        
+    except Exception as e:
+        print(f"Error calculating momentum oscillator: {e}")
+        return pd.Series([50] * len(rsi), index=rsi.index)
+
+
 # 导出的函数列表
 __all__ = [
     'trend_strength_indicator', 'volatility_breakout', 'support_resistance',
     'ichimoku_cloud', 'pivot_points', 'momentum_divergence', 'multi_timeframe_signal',
     'market_regime_detection', 'fibonacci_retracement', 'volume_price_analysis',
-    'composite_momentum_score'
+    'composite_momentum_score', 'momentum_oscillator'
 ] 
