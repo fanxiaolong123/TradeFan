@@ -13,7 +13,6 @@ import json
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import os
 
-from .backtest_module import BacktestEngine
 from .professional_backtest_analyzer import BacktestAnalyzer
 from strategies.scalping_strategy import ScalpingStrategy
 from strategies.trend_following_strategy import TrendFollowingStrategy, MARKET_SPECIFIC_CONFIGS

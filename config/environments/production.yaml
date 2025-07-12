@@ -80,35 +80,35 @@ monitoring:
 exchanges:
   - name: "binance"
     api_key: "Mq0XFmuMRDMBH5NMhFWHGM8ZivVRCvAbqaBXIK3DeJc6EnNj7isN03bpdwTKUKjN"
-    api_secret: ""  # 需要在环境变量中设置
-    sandbox: true  # 先使用测试网
+    api_secret: "QkKb8JjFOhnC0Ri4Zya6HMeBMtuMeArGR9zem38ULwm8Zo6O0sLORNs9OX63rdWv"
+    sandbox: false  # 正式环境 - 请谨慎使用
     rate_limit: 1200
     symbols:
-      - symbol: "BTC/USDT"
+      - symbol: "BTCUSDT"  # 修正格式，去掉斜杠
         enabled: true
         capital: 142.86  # 1000/7 ≈ 142.86
         strategy: "both"  # 同时运行两个策略
-      - symbol: "ETH/USDT"
+      - symbol: "ETHUSDT"
         enabled: true
         capital: 142.86
         strategy: "both"
-      - symbol: "BNB/USDT"
+      - symbol: "BNBUSDT"
         enabled: true
         capital: 142.86
         strategy: "both"
-      - symbol: "SOL/USDT"
+      - symbol: "SOLUSDT"
         enabled: true
         capital: 142.86
         strategy: "both"
-      - symbol: "PEPE/USDT"
+      - symbol: "PEPEUSDT"
         enabled: true
         capital: 142.86
         strategy: "scalping"  # 只用短线策略
-      - symbol: "DOGE/USDT"
+      - symbol: "DOGEUSDT"
         enabled: true
         capital: 142.86
         strategy: "both"
-      - symbol: "WLD/USDT"
+      - symbol: "WLDUSDT"
         enabled: true
         capital: 142.86
         strategy: "trend_following"  # 只用趋势策略
