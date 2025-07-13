@@ -178,6 +178,12 @@ class ScalpingStrategy(BaseStrategy):
         
         return df
     
+    def get_strategy(self, strategy_name: str):
+        """获取策略实例"""
+        if strategy_name == "ScalpingStrategy":
+            return self
+        return None
+    
     def generate_signals(self, data: pd.DataFrame) -> pd.DataFrame:
         """生成交易信号"""
         df = data.copy()

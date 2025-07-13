@@ -202,28 +202,6 @@ class DataModule:
         if self.logger:
             self.logger.error(error_msg)
         raise Exception(error_msg)
-            
-            # 过滤日期范围
-            df = df[(df.index >= start_date) & (df.index <= end_date)]
-            
-            # 确保数据类型
-            for col in ['open', 'high', 'low', 'close', 'volume']:
-                df[col] = pd.to_numeric(df[col], errors='coerce')
-            
-            # 保存到缓存
-            with open(cache_file, 'wb') as f:
-                pickle.dump(df, f)
-            
-            if self.logger:
-                self.logger.info(f"获取{symbol}历史数据完成，共{len(df)}条记录")
-            
-            return df
-            
-        except Exception as e:
-            error_msg = f"获取{symbol}历史数据失败: {e}"
-            if self.logger:
-                self.logger.error(error_msg)
-            raise Exception(error_msg)
     
     def get_account_balance(self) -> Dict:
         """获取账户余额"""

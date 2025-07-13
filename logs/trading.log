@@ -126,3 +126,68 @@
 2025-07-11 22:15:50 | WARNING  | modules.log_module:warning:63 - 获取数据失败 BTC/USDT: 获取BTC/USDT历史数据失败: strptime() argument 1 must be str, not None, 使用模拟数据
 2025-07-11 22:15:50 | WARNING  | modules.log_module:warning:63 - 获取数据失败 BTC/USDT: 获取BTC/USDT历史数据失败: strptime() argument 1 must be str, not None, 使用模拟数据
 2025-07-11 22:15:50 | WARNING  | modules.log_module:warning:63 - 获取数据失败 BTC/USDT: 获取BTC/USDT历史数据失败: strptime() argument 1 must be str, not None, 使用模拟数据
+2025-07-12 23:08:21 | INFO     | modules.log_module:info:59 - 交易所连接初始化成功: binance
+2025-07-12 23:08:21 | INFO     | modules.log_module:info:59 - 风险控制模块初始化完成 - 初始资金: 10000
+2025-07-12 23:08:54 | INFO     | modules.log_module:info:59 - 交易所连接初始化成功: binance
+2025-07-12 23:08:54 | INFO     | modules.log_module:info:59 - 风险控制模块初始化完成 - 初始资金: 10000
+2025-07-12 23:08:54 | INFO     | modules.log_module:info:59 - 回测模块初始化完成 - 期间: 2024-01-01 至 2024-12-31
+2025-07-12 23:09:14 | INFO     | modules.log_module:info:59 - 交易所连接初始化成功: binance
+2025-07-12 23:09:14 | INFO     | modules.log_module:info:59 - 风险控制模块初始化完成 - 初始资金: 10000
+2025-07-12 23:09:14 | INFO     | modules.log_module:info:59 - 回测模块初始化完成 - 期间: 2024-01-01 至 2024-12-31
+2025-07-12 23:09:48 | INFO     | modules.log_module:info:59 - 交易所连接初始化成功: binance
+2025-07-12 23:09:48 | INFO     | modules.log_module:info:59 - 风险控制模块初始化完成 - 初始资金: 10000
+2025-07-12 23:09:48 | INFO     | modules.log_module:info:59 - 回测模块初始化完成 - 期间: 2024-01-01 至 2024-12-31
+2025-07-12 23:09:48 | INFO     | modules.log_module:info:59 - 开始回测 - 策略: ScalpingStrategy, 币种: ['BTC/USDT', 'ETH/USDT', 'BNB/USDT', 'SOL/USDT']
+2025-07-12 23:09:48 | INFO     | modules.log_module:info:59 - 加载BTC/USDT历史数据...
+2025-07-12 23:09:48 | INFO     | modules.log_module:info:59 - 尝试从yahoo获取BTC/USDT历史数据
+2025-07-12 23:09:51 | INFO     | modules.log_module:info:59 - 成功从yahoo获取BTC/USDT数据: 30条记录
+2025-07-12 23:09:51 | INFO     | modules.log_module:info:59 - BTC/USDT数据加载完成，共30条记录
+2025-07-12 23:09:51 | INFO     | modules.log_module:info:59 - 加载ETH/USDT历史数据...
+2025-07-12 23:09:51 | INFO     | modules.log_module:info:59 - 尝试从yahoo获取ETH/USDT历史数据
+2025-07-12 23:09:52 | INFO     | modules.log_module:info:59 - 成功从yahoo获取ETH/USDT数据: 30条记录
+2025-07-12 23:09:52 | INFO     | modules.log_module:info:59 - ETH/USDT数据加载完成，共30条记录
+2025-07-12 23:09:52 | INFO     | modules.log_module:info:59 - 加载BNB/USDT历史数据...
+2025-07-12 23:09:52 | INFO     | modules.log_module:info:59 - 尝试从yahoo获取BNB/USDT历史数据
+2025-07-12 23:09:52 | INFO     | modules.log_module:info:59 - 成功从yahoo获取BNB/USDT数据: 30条记录
+2025-07-12 23:09:52 | INFO     | modules.log_module:info:59 - BNB/USDT数据加载完成，共30条记录
+2025-07-12 23:09:52 | INFO     | modules.log_module:info:59 - 加载SOL/USDT历史数据...
+2025-07-12 23:09:52 | INFO     | modules.log_module:info:59 - 尝试从yahoo获取SOL/USDT历史数据
+2025-07-12 23:09:53 | INFO     | modules.log_module:info:59 - 成功从yahoo获取SOL/USDT数据: 30条记录
+2025-07-12 23:09:53 | INFO     | modules.log_module:info:59 - SOL/USDT数据加载完成，共30条记录
+2025-07-12 23:09:53 | ERROR    | modules.log_module:error:67 - 回测执行失败: 'ScalpingStrategy' object has no attribute 'get_strategy'
+2025-07-12 23:10:43 | INFO     | modules.log_module:info:59 - 交易所连接初始化成功: binance
+2025-07-12 23:10:43 | INFO     | modules.log_module:info:59 - 风险控制模块初始化完成 - 初始资金: 10000
+2025-07-12 23:10:43 | INFO     | modules.log_module:info:59 - 回测模块初始化完成 - 期间: 2024-01-01 至 2024-12-31
+2025-07-12 23:10:43 | INFO     | modules.log_module:info:59 - 开始回测 - 策略: ScalpingStrategy, 币种: ['BTC/USDT', 'ETH/USDT', 'BNB/USDT', 'SOL/USDT']
+2025-07-12 23:10:43 | INFO     | modules.log_module:info:59 - 加载BTC/USDT历史数据...
+2025-07-12 23:10:43 | INFO     | modules.log_module:info:59 - 尝试从yahoo获取BTC/USDT历史数据
+2025-07-12 23:10:45 | INFO     | modules.log_module:info:59 - 成功从yahoo获取BTC/USDT数据: 30条记录
+2025-07-12 23:10:45 | INFO     | modules.log_module:info:59 - BTC/USDT数据加载完成，共30条记录
+2025-07-12 23:10:45 | INFO     | modules.log_module:info:59 - 加载ETH/USDT历史数据...
+2025-07-12 23:10:45 | INFO     | modules.log_module:info:59 - 尝试从yahoo获取ETH/USDT历史数据
+2025-07-12 23:10:46 | INFO     | modules.log_module:info:59 - 成功从yahoo获取ETH/USDT数据: 30条记录
+2025-07-12 23:10:46 | INFO     | modules.log_module:info:59 - ETH/USDT数据加载完成，共30条记录
+2025-07-12 23:10:46 | INFO     | modules.log_module:info:59 - 加载BNB/USDT历史数据...
+2025-07-12 23:10:46 | INFO     | modules.log_module:info:59 - 尝试从yahoo获取BNB/USDT历史数据
+2025-07-12 23:10:47 | INFO     | modules.log_module:info:59 - 成功从yahoo获取BNB/USDT数据: 30条记录
+2025-07-12 23:10:47 | INFO     | modules.log_module:info:59 - BNB/USDT数据加载完成，共30条记录
+2025-07-12 23:10:47 | INFO     | modules.log_module:info:59 - 加载SOL/USDT历史数据...
+2025-07-12 23:10:47 | INFO     | modules.log_module:info:59 - 尝试从yahoo获取SOL/USDT历史数据
+2025-07-12 23:10:48 | INFO     | modules.log_module:info:59 - 成功从yahoo获取SOL/USDT数据: 30条记录
+2025-07-12 23:10:48 | INFO     | modules.log_module:info:59 - SOL/USDT数据加载完成，共30条记录
+2025-07-12 23:10:48 | INFO     | modules.log_module:info:59 - 回测时间点数量: 30
+2025-07-12 23:10:48 | INFO     | modules.log_module:info:59 - 回测进度: 3.3% (2024-01-01 00:00:00)
+2025-07-12 23:10:48 | INFO     | modules.log_module:info:59 - ==================================================
+2025-07-12 23:10:48 | INFO     | modules.log_module:info:59 - 回测结果汇总:
+2025-07-12 23:10:48 | INFO     | modules.log_module:info:59 - 总收益率: 0.00%
+2025-07-12 23:10:48 | INFO     | modules.log_module:info:59 - 年化收益率: 0.00%
+2025-07-12 23:10:48 | INFO     | modules.log_module:info:59 - 夏普比率: 0.0000
+2025-07-12 23:10:48 | INFO     | modules.log_module:info:59 - 最大回撤: 0.00%
+2025-07-12 23:10:48 | INFO     | modules.log_module:info:59 - 胜率: 0.00%
+2025-07-12 23:10:48 | INFO     | modules.log_module:info:59 - 总交易次数: 0
+2025-07-12 23:10:48 | INFO     | modules.log_module:info:59 - 盈利交易: 0
+2025-07-12 23:10:48 | INFO     | modules.log_module:info:59 - 亏损交易: 0
+2025-07-12 23:10:48 | INFO     | modules.log_module:info:59 - ==================================================
+2025-07-12 23:10:48 | INFO     | modules.log_module:info:59 - 权益曲线已保存: results/equity_curve_20250712_231048.csv
+2025-07-12 23:10:48 | INFO     | modules.log_module:info:59 - 回测图表已保存: results/backtest_chart_20250712_231048.png
+2025-07-12 23:20:25 | INFO     | modules.log_module:info:59 - 回测完成

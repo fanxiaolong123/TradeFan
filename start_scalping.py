@@ -32,12 +32,12 @@ def print_banner():
     """打印启动横幅"""
     banner = """
 ╔══════════════════════════════════════════════════════════════╗
-║                    TradeFan 短线交易系统                      ║
+║                    TradeFan 短线交易系统                       ║
 ║                  Professional Scalping System                ║
 ╠══════════════════════════════════════════════════════════════╣
-║  版本: v2.0.0                                               ║
-║  作者: TradeFan Team                                        ║
-║  时间: {}                                    ║
+║  版本: v2.0.0                                                 ║
+║  作者: TradeFan Team                                          ║
+║  时间: {}                                                     ║
 ╚══════════════════════════════════════════════════════════════╝
     """.format(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     print(banner)
@@ -73,13 +73,6 @@ async def run_live_trading(config: dict):
     
     print("启动实盘交易模式...")
     print("⚠️  警告: 这是实盘交易，请确保您已经充分测试策略！")
-    
-    # 确认提示
-    if not config.get('development', {}).get('paper_trading', True):
-        confirm = input("确认启动实盘交易? (输入 'YES' 确认): ")
-        if confirm != 'YES':
-            print("已取消实盘交易")
-            return
     
     # 创建交易系统
     trading_system = ScalpingTradingSystem()
@@ -118,15 +111,39 @@ async def run_backtest(config: dict, start_date: str = None, end_date: str = Non
     strategy_config = config.get('strategy', {}).get('scalping', {})
     strategy = ScalpingStrategy(**strategy_config)
     
+    # 创建必要的模块
+    from modules.data_module import DataModule
+    from modules.risk_control_module import RiskControlModule
+    from modules.execution_module import ExecutionModule
+    from modules.log_module import LogModule
+    
+    # 创建日志模块
+    logger = LogModule(config)
+    
+    # 创建数据模块
+    data_module = DataModule(config, logger)
+    
+    # 创建风险控制模块
+    risk_control = RiskControlModule(config, logger)
+    
+    # 创建执行模块
+    execution_module = ExecutionModule(config, logger)
+    
+    # 创建策略管理器
+    strategy_manager = ScalpingStrategy(config=config, logger=logger)
+    
     # 创建回测模块
-    backtest_config = config.get('backtest', {})
     backtest = BacktestModule(
-        initial_capital=backtest_config.get('initial_capital', 10000),
-        maker_fee=backtest_config.get('maker_fee', 0.001),
-        taker_fee=backtest_config.get('taker_fee', 0.001)
+        config=config,
+        data_module=data_module,
+        strategy_manager=strategy_manager,
+        risk_control=risk_control,
+        execution_module=execution_module,
+        logger=logger
     )
     
     # 设置回测参数
+    backtest_config = config.get('backtest', {})
     symbols = [s['symbol'] for s in config.get('trading', {}).get('symbols', []) if s.get('enabled', False)]
     timeframes = [tf['timeframe'] for tf in config.get('trading', {}).get('timeframes', []) if tf.get('enabled', False)]
     
@@ -139,12 +156,9 @@ async def run_backtest(config: dict, start_date: str = None, end_date: str = Non
     
     # 运行回测
     try:
-        results = await backtest.run_backtest(
-            strategy=strategy,
+        results = backtest.run_backtest(
             symbols=symbols,
-            timeframes=timeframes,
-            start_date=start_date,
-            end_date=end_date
+            strategy_name="ScalpingStrategy"
         )
         
         # 显示结果
