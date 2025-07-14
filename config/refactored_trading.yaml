@@ -1,0 +1,78 @@
+# TradeFan 重构后的交易配置示例
+# 展示新的配置结构和功能
+
+version: '2.0.0'
+name: 'refactored_trading_demo'
+description: '重构后的交易系统配置示例'
+
+# API配置
+api:
+  exchange: 'binance'
+  api_key: '${BINANCE_API_KEY}'
+  api_secret: '${BINANCE_API_SECRET}'
+  base_url: 'https://testnet.binance.vision'
+  testnet: true
+  timeout: 10
+  max_retries: 3
+
+# 交易配置
+trading:
+  symbols: ['BTCUSDT', 'ETHUSDT']
+  base_currency: 'USDT'
+  position_size_ratio: 0.1
+  max_positions: 3
+  update_interval: 60  # 秒
+  
+  # 策略配置
+  strategy:
+    name: 'trend_following'
+    parameters:
+      ema_fast: 8
+      ema_slow: 21
+      rsi_period: 14
+      signal_threshold: 0.3
+
+# 风险管理
+risk_management:
+  max_daily_loss: 0.02
+  max_position_risk: 0.01
+  stop_loss: 0.02
+  take_profit: 0.04
+  max_consecutive_losses: 3
+  
+  # 动态风险调整
+  dynamic_risk:
+    enabled: true
+    volatility_adjustment: true
+    drawdown_protection: true
+
+# 日志配置
+logging:
+  level: 'INFO'
+  console_output: true
+  file_output: true
+  colored_output: true
+  
+  # 专用日志过滤器
+  filters:
+    - include: ['交易', '信号', '订单', '风险']
+      exclude: ['debug', 'heartbeat']
+
+# 监控配置
+monitoring:
+  enabled: true
+  report_interval: 3600  # 秒
+  alert_webhook: '${ALERT_WEBHOOK_URL:}'
+  
+  # 性能监控
+  performance:
+    track_latency: true
+    track_memory: true
+    track_api_usage: true
+
+# 数据源配置
+data_source:
+  primary: 'binance'
+  backup: ['yahoo', 'fallback']
+  cache_enabled: true
+  cache_duration: 300  # 秒

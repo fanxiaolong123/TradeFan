@@ -1,30 +1,22 @@
 """
-策略模块包
-提供策略基类和策略注册机制
+TradeFan 策略实现层
+包含各种类型的交易策略实现
+按策略类型分类组织
 """
 
-from .base_strategy import BaseStrategy
-from .trend_ma_breakout import TrendMABreakoutStrategy
-from .donchian_rsi_adx import DonchianRSIADXStrategy
-from .reversal_bollinger import ReversalBollingerStrategy
+# 趋势策略 (已实现)
+from .trend.trend_following import TrendFollowingStrategy
 
-# 策略注册表
-STRATEGY_REGISTRY = {
-    'trend_ma_breakout': TrendMABreakoutStrategy,
-    'donchian_rsi_adx': DonchianRSIADXStrategy,
-    'reversal_bollinger': ReversalBollingerStrategy,
-}
+# 策略配置模板
+from .strategy_templates import STRATEGY_TEMPLATES
 
-def get_strategy(strategy_name: str, **kwargs):
-    """获取策略实例"""
-    if strategy_name not in STRATEGY_REGISTRY:
-        raise ValueError(f"未知策略: {strategy_name}. 可用策略: {list(STRATEGY_REGISTRY.keys())}")
+__all__ = [
+    # 趋势策略
+    'TrendFollowingStrategy',
     
-    strategy_class = STRATEGY_REGISTRY[strategy_name]
-    return strategy_class(**kwargs)
+    # 配置模板
+    'STRATEGY_TEMPLATES'
+]
 
-def list_strategies():
-    """列出所有可用策略"""
-    return list(STRATEGY_REGISTRY.keys())
-
-__all__ = ['BaseStrategy', 'get_strategy', 'list_strategies', 'STRATEGY_REGISTRY']
+__version__ = '2.0.0'
+__author__ = 'TradeFan Team'
