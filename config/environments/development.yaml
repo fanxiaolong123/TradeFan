@@ -1,0 +1,53 @@
+# 开发环境配置
+environment: development
+
+# 交易配置
+trading:
+  enabled: false  # 开发环境默认禁用实际交易
+  testnet: true   # 使用测试网络
+  dry_run: true   # 模拟交易
+  
+# API配置
+api:
+  binance:
+    base_url: "https://testnet.binance.vision"  # 测试网API
+    rate_limit:
+      requests_per_minute: 100
+      orders_per_minute: 20
+  
+# 数据库配置
+database:
+  host: "localhost"
+  port: 5432
+  database: "tradefan_dev"
+  username: "dev_user"
+  password: "dev_password"
+  
+# 缓存配置
+cache:
+  redis:
+    host: "localhost"
+    port: 6379
+    database: 0
+    ttl: 3600
+    
+# 日志配置
+logging:
+  level: DEBUG
+  console: true
+  file: true
+  file_path: "logs/development.log"
+  
+# 监控配置
+monitoring:
+  enabled: true
+  metrics_port: 8081
+  dashboard_port: 8080
+  alerts:
+    enabled: true
+    
+# 策略配置
+strategies:
+  default_position_size: 0.01  # 开发环境使用小仓位
+  max_positions: 3
+  risk_limit: 0.02  # 2%风险限制

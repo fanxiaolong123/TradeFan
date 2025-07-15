@@ -1,0 +1,62 @@
+# 测试环境配置
+environment: testing
+
+# 交易配置
+trading:
+  enabled: false  # 测试环境禁用实际交易
+  testnet: true
+  dry_run: true
+  backtesting: true
+  
+# API配置
+api:
+  binance:
+    base_url: "https://testnet.binance.vision"
+    rate_limit:
+      requests_per_minute: 200
+      orders_per_minute: 50
+      
+# 数据配置
+data:
+  sources:
+    - type: "mock"  # 使用模拟数据源
+      symbols: ["BTCUSDT", "ETHUSDT", "BNBUSDT"]
+    - type: "historical"  # 历史数据回测
+      path: "data/historical"
+      
+# 数据库配置
+database:
+  host: "localhost"
+  port: 5432
+  database: "tradefan_test"
+  username: "test_user"
+  password: "test_password"
+  
+# 缓存配置
+cache:
+  memory_only: true  # 测试环境只使用内存缓存
+  ttl: 300
+  
+# 日志配置
+logging:
+  level: INFO
+  console: true
+  file: false  # 测试环境不写文件日志
+  
+# 监控配置
+monitoring:
+  enabled: false  # 测试环境禁用监控
+  
+# 策略配置
+strategies:
+  default_position_size: 0.001  # 极小仓位用于测试
+  max_positions: 1
+  risk_limit: 0.01
+  
+# 测试配置
+testing:
+  fast_mode: true  # 快速测试模式
+  mock_api: true   # 模拟API调用
+  data_range:
+    start: "2024-01-01"
+    end: "2024-12-31"

@@ -1,0 +1,127 @@
+# 投资组合配置
+portfolios:
+  # 保守组合
+  conservative:
+    name: "保守型投资组合"
+    description: "低风险稳健收益策略组合"
+    risk_level: "low"
+    target_return: 0.15  # 年化15%
+    max_drawdown: 0.05   # 最大回撤5%
+    
+    strategies:
+      - name: "basic_trend_following"
+        weight: 0.4
+        allocation: 0.3
+      - name: "bollinger_reversion"
+        weight: 0.3
+        allocation: 0.2
+      - name: "ma_breakout"
+        weight: 0.3
+        allocation: 0.2
+        
+    symbols:
+      - symbol: "BTCUSDT"
+        weight: 0.5
+      - symbol: "ETHUSDT"
+        weight: 0.3
+      - symbol: "BNBUSDT"
+        weight: 0.2
+        
+  # 平衡组合
+  balanced:
+    name: "平衡型投资组合"
+    description: "中等风险平衡收益策略组合"
+    risk_level: "medium"
+    target_return: 0.25  # 年化25%
+    max_drawdown: 0.10   # 最大回撤10%
+    
+    strategies:
+      - name: "advanced_trend_following"
+        weight: 0.35
+        allocation: 0.4
+      - name: "breakout_strategy"
+        weight: 0.25
+        allocation: 0.3
+      - name: "bollinger_reversion"
+        weight: 0.2
+        allocation: 0.2
+      - name: "scalping_strategy"
+        weight: 0.2
+        allocation: 0.1
+        
+    symbols:
+      - symbol: "BTCUSDT"
+        weight: 0.4
+      - symbol: "ETHUSDT"
+        weight: 0.3
+      - symbol: "BNBUSDT"
+        weight: 0.15
+      - symbol: "SOLUSDT"
+        weight: 0.15
+        
+  # 激进组合
+  aggressive:
+    name: "激进型投资组合"
+    description: "高风险高收益策略组合"
+    risk_level: "high"
+    target_return: 0.40  # 年化40%
+    max_drawdown: 0.20   # 最大回撤20%
+    
+    strategies:
+      - name: "momentum_strategy"
+        weight: 0.3
+        allocation: 0.3
+      - name: "breakout_strategy"
+        weight: 0.25
+        allocation: 0.3
+      - name: "donchian_rsi_adx"
+        weight: 0.25
+        allocation: 0.25
+      - name: "scalping_strategy"
+        weight: 0.2
+        allocation: 0.15
+        
+    symbols:
+      - symbol: "BTCUSDT"
+        weight: 0.35
+      - symbol: "ETHUSDT"
+        weight: 0.25
+      - symbol: "SOLUSDT"
+        weight: 0.2
+      - symbol: "BNBUSDT"
+        weight: 0.1
+      - symbol: "DOGEUSDT"
+        weight: 0.1
+
+# 组合管理设置
+portfolio_management:
+  # 重平衡设置
+  rebalancing:
+    frequency: "weekly"      # 重平衡频率: daily, weekly, monthly
+    threshold: 0.05          # 偏离阈值5%触发重平衡
+    max_trades_per_rebalance: 10  # 每次重平衡最大交易数
+    
+  # 风险控制
+  risk_control:
+    max_portfolio_risk: 0.15     # 最大组合风险15%
+    correlation_monitoring: true  # 监控相关性
+    var_limit: 0.02             # VaR限制2%
+    
+  # 执行设置
+  execution:
+    order_type: "market"        # 订单类型
+    slippage_tolerance: 0.001   # 滑点容忍度0.1%
+    partial_fill_handling: true # 处理部分成交
+    
+# 默认组合配置
+default_portfolio: "balanced"
+
+# 业绩基准
+benchmarks:
+  btc: "BTCUSDT"
+  eth: "ETHUSDT"
+  crypto_index: 
+    weights:
+      BTCUSDT: 0.6
+      ETHUSDT: 0.3
+      BNBUSDT: 0.1

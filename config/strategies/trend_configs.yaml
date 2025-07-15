@@ -1,0 +1,111 @@
+# 趋势策略配置
+trend_strategies:
+  # 基础趋势跟踪策略
+  basic_trend_following:
+    class: "strategies.trend.TrendFollowingStrategy"
+    enabled: true
+    parameters:
+      fast_ema: 8
+      slow_ema: 21
+      rsi_threshold: 50
+      rsi_overbought: 80
+      rsi_oversold: 20
+    timeframes: ["1h", "4h"]
+    symbols: ["BTCUSDT", "ETHUSDT"]
+    position_size: 0.1
+    
+  # 高级趋势跟踪策略
+  advanced_trend_following:
+    class: "strategies.trend.AdvancedTrendFollowingStrategy"
+    enabled: true
+    parameters:
+      fast_ema: 12
+      slow_ema: 26
+      signal_ema: 9
+      atr_period: 14
+      stop_loss_atr: 2.0
+      take_profit_atr: 3.0
+    timeframes: ["4h", "1d"]
+    symbols: ["BTCUSDT", "ETHUSDT", "BNBUSDT"]
+    position_size: 0.15
+    
+  # 突破策略
+  breakout_strategy:
+    class: "strategies.trend.BreakoutStrategy"
+    enabled: true
+    parameters:
+      lookback_period: 20
+      min_channel_width: 0.02
+      volume_confirmation: true
+      breakout_threshold: 0.001
+    timeframes: ["4h", "1d"]
+    symbols: ["BTCUSDT", "ETHUSDT", "SOLUSDT"]
+    position_size: 0.12
+    
+  # 动量策略
+  momentum_strategy:
+    class: "strategies.trend.MomentumStrategy"
+    enabled: false  # 默认禁用
+    parameters:
+      momentum_period: 10
+      roc_period: 12
+      momentum_threshold: 0.02
+      rsi_filter: true
+      rsi_min: 30
+      rsi_max: 70
+    timeframes: ["1h", "4h"]
+    symbols: ["BTCUSDT", "ETHUSDT"]
+    position_size: 0.08
+    
+  # 唐奇安通道+RSI+ADX策略
+  donchian_rsi_adx:
+    class: "strategies.trend.DonchianRSIADXStrategy"
+    enabled: true
+    parameters:
+      donchian_period: 20
+      rsi_period: 14
+      adx_period: 14
+      rsi_overbought: 70
+      rsi_oversold: 30
+      adx_threshold: 25
+      breakout_threshold: 0.001
+    timeframes: ["4h"]
+    symbols: ["BTCUSDT", "ETHUSDT", "BNBUSDT", "SOLUSDT"]
+    position_size: 0.1
+    
+  # MA突破策略
+  ma_breakout:
+    class: "strategies.trend.TrendMABreakoutStrategy"
+    enabled: true
+    parameters:
+      fast_ma: 20
+      slow_ma: 50
+      rsi_period: 14
+      rsi_overbought: 70
+      rsi_oversold: 30
+      ma_type: "SMA"
+      min_trend_strength: 0.01
+    timeframes: ["1h", "4h"]
+    symbols: ["BTCUSDT", "ETHUSDT", "BNBUSDT"]
+    position_size: 0.1
+
+# 通用趋势策略设置
+trend_settings:
+  # 风险管理
+  risk_management:
+    max_positions_per_strategy: 3
+    max_total_exposure: 0.5  # 最大总敞口50%
+    correlation_limit: 0.7   # 相关性限制
+    
+  # 执行设置
+  execution:
+    signal_cooldown: 300     # 信号冷却时间(秒)
+    max_signals_per_hour: 6  # 每小时最大信号数
+    min_time_between_trades: 600  # 交易间最小时间间隔(秒)
+    
+  # 止损止盈
+  risk_control:
+    default_stop_loss: 0.02  # 默认止损2%
+    default_take_profit: 0.04  # 默认止盈4%
+    trailing_stop: true      # 启用追踪止损
+    trailing_distance: 0.01  # 追踪距离1%

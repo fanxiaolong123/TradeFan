@@ -1,0 +1,198 @@
+# 监控系统配置
+monitoring:
+  # 启用状态
+  enabled: true
+  
+  # Web监控面板
+  dashboard:
+    enabled: true
+    host: "0.0.0.0"
+    port: 8080
+    debug: false
+    auto_refresh: 30  # 自动刷新间隔(秒)
+    
+  # 告警系统
+  alerts:
+    enabled: true
+    max_alerts: 1000
+    retention_days: 30
+    
+    # 告警规则
+    rules:
+      position_loss:
+        enabled: true
+        threshold: 5.0  # 持仓亏损5%触发
+        level: "warning"
+        cooldown: 300   # 冷却时间5分钟
+        
+      position_major_loss:
+        enabled: true
+        threshold: 10.0  # 持仓亏损10%触发
+        level: "critical"
+        cooldown: 600
+        
+      api_connection_error:
+        enabled: true
+        level: "error"
+        cooldown: 60
+        
+      insufficient_balance:
+        enabled: true
+        threshold: 100.0  # 余额低于100 USDT
+        level: "warning"
+        cooldown: 3600
+        
+      strategy_error:
+        enabled: true
+        level: "error"
+        cooldown: 300
+        
+    # 通知渠道
+    notifications:
+      enabled: true
+      
+      # 邮件通知
+      email:
+        enabled: false
+        smtp_host: "smtp.gmail.com"
+        smtp_port: 587
+        username: ""
+        password: ""
+        from_email: ""
+        to_emails: []
+        
+      # 钉钉机器人
+      dingtalk:
+        enabled: false
+        webhook_url: ""
+        secret: ""
+        
+      # 企业微信
+      wechat:
+        enabled: false
+        webhook_url: ""
+        
+      # Slack
+      slack:
+        enabled: false
+        webhook_url: ""
+        channel: ""
+        
+  # 性能监控
+  performance:
+    enabled: true
+    
+    # 指标收集
+    metrics:
+      system_metrics: true     # 系统指标(CPU, 内存等)
+      trading_metrics: true    # 交易指标
+      strategy_metrics: true   # 策略指标
+      latency_metrics: true    # 延迟指标
+      
+    # 指标存储
+    storage:
+      type: "memory"  # memory, redis, influxdb
+      retention_hours: 24
+      
+    # 性能阈值
+    thresholds:
+      cpu_usage: 80        # CPU使用率80%
+      memory_usage: 80     # 内存使用率80%
+      api_latency: 1000    # API延迟1秒
+      order_latency: 500   # 订单延迟500ms
+      
+  # 健康检查
+  health_check:
+    enabled: true
+    interval: 30  # 检查间隔(秒)
+    
+    checks:
+      api_connection: true
+      database_connection: true
+      strategy_health: true
+      data_feed_health: true
+      
+  # 系统监控
+  system:
+    enabled: true
+    
+    # 资源监控
+    resources:
+      cpu: true
+      memory: true
+      disk: true
+      network: true
+      
+    # 进程监控
+    processes:
+      enabled: true
+      monitor_threads: true
+      
+    # 文件监控
+    files:
+      log_files: true
+      config_files: true
+      
+# Prometheus监控配置
+prometheus:
+  enabled: false
+  host: "0.0.0.0"
+  port: 8090
+  
+  # 指标配置
+  metrics:
+    # 自定义指标
+    custom_metrics:
+      trading_signals_total:
+        type: "counter"
+        description: "交易信号总数"
+        labels: ["strategy", "symbol", "signal_type"]
+        
+      position_pnl:
+        type: "gauge"
+        description: "持仓盈亏"
+        labels: ["symbol", "strategy"]
+        
+      api_request_duration:
+        type: "histogram"
+        description: "API请求耗时"
+        labels: ["endpoint", "method"]
+        buckets: [0.1, 0.5, 1.0, 2.0, 5.0]
+        
+      strategy_execution_time:
+        type: "histogram"
+        description: "策略执行时间"
+        labels: ["strategy_name"]
+        buckets: [0.01, 0.05, 0.1, 0.5, 1.0]
+
+# Grafana配置
+grafana:
+  enabled: false
+  
+  dashboards:
+    - name: "交易系统总览"
+      file: "config/grafana/dashboards/trading_overview.json"
+    - name: "策略性能"
+      file: "config/grafana/dashboards/strategy_performance.json"
+    - name: "系统监控"
+      file: "config/grafana/dashboards/system_monitoring.json"
+      
+# 日志监控
+log_monitoring:
+  enabled: true
+  
+  # 错误日志监控
+  error_patterns:
+    - pattern: "ERROR"
+      threshold: 10    # 10分钟内超过10个错误触发告警
+      window: 600
+      
+    - pattern: "CRITICAL"
+      threshold: 1     # 任何CRITICAL级别立即告警
+      window: 60
+      
+  # 性能日志监控
+  performance_patterns:
+    - pattern: "slow_query"
+      threshold: 5
+      window: 300
